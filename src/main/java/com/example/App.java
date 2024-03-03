@@ -1,41 +1,19 @@
 package com.example;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import org.json.*;
+import io.github.cdimascio.dotenv.Dotenv;
 
-/**
- * Hello world!
- *
- */
 public class App {
     public static void main(String[] args) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(
-                        "https://api.openweathermap.org/data/2.5/weather?lat=37.3688&lon=122.0363&appid=9b2801f09f907db9079c9bcd3bac08f7"))
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-        HttpResponse<String> response = null;
-        try {
-            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String result = response.body();
-       // System.out.println(result);
 
-        String jsonString = result; // assign your JSON String here
-        JSONObject obj = new JSONObject(jsonString);
-        JSONArray weathers = obj.getJSONArray("weather");
-        for (int i = 0; i < weathers.length(); i++){
-            JSONObject weather = weathers.getJSONObject(i);
-            String description = weather.getString("description");  
-            System.out.println(description);
+        Dotenv dotenv = Dotenv.configure()
+        .directory("./").load();
+        String APP_ID = dotenv.get("APP_ID");
+
+        WeatherApi api = new WeatherApi(APP_ID);
+        String descriptions[] = api.getWeather(37.3688, 122.0363);
+
+        for (int i = 0; i < descriptions.length; i++) {
+            System.out.println(descriptions[i]);
         }
 
     }

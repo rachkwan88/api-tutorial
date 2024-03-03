@@ -24,3 +24,7 @@ The program will do 3 steps:
 1. call the weather API
 2. Parse JSON result
 3. Extract and print weather.description
+
+# Remarks
+
+1. Please copy .env-example to .env and paste in your own API key in there
